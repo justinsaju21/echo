@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Club Recruitment Website
 
-## Getting Started
+A modern, responsive recruitment website built with Next.js, Tailwind CSS, and Google Sheets integration.
 
-First, run the development server:
+## Features
+- **Modern UI**: Dark mode, smooth animations (Framer Motion), clean component structure.
+- **Application Form**: Detailed form with validation (Zod) and "Proof of Work" link support.
+- **Google Sheets Backend**: Automatically saves responses to a Google Sheet.
+- **Responsive**: Fully optimized for mobile and desktop.
 
+## Setup Guide
+
+### 1. Google Cloud Setup
+1.  Go to the [Google Cloud Console](https://console.cloud.google.com/).
+2.  Create a new project (e.g., "Club-Recruitment").
+3.  Search for "Google Sheets API" and enable it.
+4.  Go to **IAM & Admin > Service Accounts**.
+5.  Click **Create Service Account**, give it a name (e.g., "sheets-editor").
+6.  Skip the role assignment (optional) and click **Done**.
+7.  Click on the newly created service account email.
+8.  Go to the **Keys** tab -> **Add Key** -> **Create new key** -> **JSON**.
+9.  This will download a JSON file. **Keep this safe!**
+
+### 2. Google Sheet Setup
+1.  Create a new Google Sheet.
+2.  Share the sheet with the **client_email** found in your downloaded JSON file (give "Editor" access).
+3.  Copy the Sheet ID from the URL (the string between `/d/` and `/edit`).
+
+### 3. Environment Variables
+1.  Rename `.env.example` to `.env.local`.
+2.  Fill in the values from your JSON key file and Sheet ID:
+    ```env
+    GOOGLE_SHEETS_SPREADSHEET_ID=1X8FoHiuP0usHV_au-1eJ_JJHqPJzWGaYH-DL3QM2S0k
+    GOOGLE_SHEETS_CLIENT_EMAIL=your_service_account_email
+    GOOGLE_SHEETS_PRIVATE_KEY="your_private_key_including_newlines"
+    ```
+
+### 4. Running Locally
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
+Open [http://localhost:3000](http://localhost:3000).
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deployment (Vercel)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1.  Push your code to GitHub.
+2.  Import the project in [Vercel](https://vercel.com).
+3.  Add the Environment Variables in the Vercel dashboard.
+    -   **Note**: For `GOOGLE_PRIVATE_KEY`, ensure you copy the entire key string. The code is set up to handle newline characters correctly.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Project Structure
+- `src/components`: UI components (Hero, Navbar, Form, etc.)
+- `src/lib`: Helper functions (Google Sheets logic)
+- `src/app/api`: Backend API routes
