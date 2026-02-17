@@ -16,7 +16,7 @@ export async function appendToSheet(data: any) {
 
         const sheets = google.sheets({ version: "v4", auth });
         const spreadsheetId = process.env.GOOGLE_SHEETS_SPREADSHEET_ID || "1X8FoHiuP0usHV_au-1eJ_JJHqPJzWGaYH-DL3QM2S0k";
-        const range = "Sheet1!A:A";
+        const range = "Applications!A:A";
 
         // Prepare row data
         // New Structure:
