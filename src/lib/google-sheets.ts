@@ -2,10 +2,14 @@ import { google } from "googleapis";
 
 export async function appendToSheet(data: any) {
     try {
+        if (!process.env.GOOGLE_SHEETS_CLIENT_EMAIL || !process.env.GOOGLE_SHEETS_PRIVATE_KEY) {
+            throw new Error("Missing Google Sheets credentials in environment variables.");
+        }
+
         const auth = new google.auth.GoogleAuth({
             credentials: {
                 client_email: process.env.GOOGLE_SHEETS_CLIENT_EMAIL,
-                private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+                private_key: process.env.GOOGLE_SHEETS_PRIVATE_KEY.replace(/\\n/g, "\n"),
             },
             scopes: [
                 "https://www.googleapis.com/auth/drive",
