@@ -6,8 +6,20 @@ export async function appendToSheet(data: any) {
             throw new Error("Missing Google Sheets credentials in environment variables.");
         }
 
-        const client_email = process.env.GOOGLE_SHEETS_CLIENT_EMAIL!.replace(/^"(.*)"$/, '$1');
-        const private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.replace(/^"(.*)"$/, '$1').replace(/\\n/g, "\n");
+        // Aggressive sanitization for the private key to handle Vercel's env var quirks
+        const client_email = process.env.GOOGLE_SHEETS_CLIENT_EMAIL
+            .trim()
+            .replace(/^["'](.*)["']$/, '$1');
+
+        let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY
+            .trim()
+            .replace(/^["'](.*)["']$/, '$1') // remove surrounding quotes
+            .replace(/\\n/g, "\n");         // convert literal \n to real newlines
+
+        // Ensure the key starts and ends correctly
+        if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
+            console.error("DEBUG: Private key missing header");
+        }
 
         const auth = new google.auth.GoogleAuth({
             credentials: {
