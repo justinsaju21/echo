@@ -117,10 +117,14 @@ export function ApplicationForm() {
                 body: JSON.stringify(data),
             });
 
-            if (!response.ok) throw new Error("Failed to submit application");
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Failed to submit application");
+            }
             setIsSuccess(true);
-        } catch (err) {
-            setError("Something went wrong. Please try again.");
+        } catch (err: any) {
+            setError(err.message || "Something went wrong. Please try again.");
         } finally {
             setIsSubmitting(false);
         }
