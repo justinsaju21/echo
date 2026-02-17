@@ -32,8 +32,11 @@ export async function POST(request: Request) {
         await appendToSheet(validation.data);
 
         return NextResponse.json({ success: true });
-    } catch (error) {
-        console.error("API Error:", error);
-        return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    } catch (error: any) {
+        console.error("API Error [Apply]:", error.message || error);
+        return NextResponse.json({
+            error: "Internal Server Error",
+            message: error.message || "Failed to process application"
+        }, { status: 500 });
     }
 }
