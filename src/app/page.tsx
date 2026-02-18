@@ -8,6 +8,7 @@ import { Features } from "@/components/Features";
 import { WhoShouldApply } from "@/components/WhoShouldApply";
 import { FAQ } from "@/components/FAQ";
 import { CallToAction } from "@/components/CallToAction";
+import { Roadmap } from "@/components/Roadmap";
 import { SystemStatus } from "@/components/SystemStatus";
 import { Reveal } from "@/components/ui/Reveal";
 
@@ -49,6 +50,10 @@ export default function Home() {
 
       <Reveal width="100%">
         <FAQ />
+      </Reveal>
+
+      <Reveal width="100%">
+        <Roadmap />
       </Reveal>
 
       <Reveal width="100%">
