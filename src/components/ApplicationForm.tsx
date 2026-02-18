@@ -169,7 +169,7 @@ export function ApplicationForm() {
                         </div>
                     </div>
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
-                        Apply for <span className="text-blue-500">Membership</span>
+                        Applied for <span className="text-blue-500">Membership</span>
                     </h1>
                     <p className="text-zinc-400 text-lg mb-8">Your response has been recorded. Shortlisted applicants will be contacted for the next stage.</p>
                     <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors font-medium">
