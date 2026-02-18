@@ -11,14 +11,29 @@ export async function appendToSheet(data: any) {
             .trim()
             .replace(/^["'](.*)["']$/, '$1');
 
-        let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY
-            .trim()
+        let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.trim();
+
+        // Handle Base64 encoded key (to fix Vercel newline issues)
+        if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
+            console.log("DEBUG: Attempting to decode Base64 private key");
+            try {
+                const decoded = Buffer.from(private_key, 'base64').toString('utf-8');
+                if (decoded.includes("-----BEGIN PRIVATE KEY-----")) {
+                    private_key = decoded;
+                }
+            } catch (e) {
+                console.error("DEBUG: Failed to decode Base64 key");
+            }
+        }
+
+        // Standard sanitization (just in case)
+        private_key = private_key
             .replace(/^["'](.*)["']$/, '$1') // remove surrounding quotes
             .replace(/\\n/g, "\n");         // convert literal \n to real newlines
 
-        // Ensure the key starts and ends correctly
+        // Final Verification
         if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
-            console.error("DEBUG: Private key missing header");
+            console.error("DEBUG: Private key missing header after processing");
         }
 
         const auth = new google.auth.GoogleAuth({
