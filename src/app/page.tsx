@@ -1,4 +1,3 @@
-import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { TechStack } from "@/components/TechStack";
 import { About } from "@/components/About";
@@ -9,13 +8,11 @@ import { Features } from "@/components/Features";
 import { WhoShouldApply } from "@/components/WhoShouldApply";
 import { FAQ } from "@/components/FAQ";
 import { CallToAction } from "@/components/CallToAction";
-import { Footer } from "@/components/Footer";
 import { SystemStatus } from "@/components/SystemStatus";
 
 export default function Home() {
   return (
     <main className="bg-black min-h-screen">
-      <Navbar />
       <SystemStatus />
       <Hero />
       <TechStack />
@@ -27,7 +24,6 @@ export default function Home() {
       <WhoShouldApply />
       <FAQ />
       <CallToAction />
-      <Footer />
     </main>
   );
 }

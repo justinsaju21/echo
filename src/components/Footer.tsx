@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 
-export function Footer() {
+export function SiteFooter() {
     return (
         <footer className="py-12 bg-black border-t border-zinc-900 text-center relative z-10">
             <div className="container mx-auto px-6">

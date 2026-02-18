@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+section[id] {
+  scroll-margin-top: 6rem;
+  /* Adjust based on navbar height */
+}
+
 @theme {
   --font-sans: var(--font-inter);
   --font-display: var(--font-outfit);

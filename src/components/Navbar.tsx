@@ -60,7 +60,7 @@ export function Navbar() {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex gap-8 text-sm font-medium text-zinc-400 items-center">
                         {["About", "Membership", "Domains", "FAQ"].map((item) => (
-                            <Link key={item} href={`#${item.toLowerCase()}`} className="hover:text-white transition-colors relative group">
+                            <Link key={item} href={`/#${item.toLowerCase()}`} className="hover:text-white transition-colors relative group">
                                 {item}
                                 <span className="absolute -bottom-1 left-0 w-0 h-px bg-blue-500 transition-all group-hover:w-full" />
                             </Link>
@@ -91,7 +91,7 @@ export function Navbar() {
                                 {["About", "Membership", "Domains", "FAQ"].map((item) => (
                                     <Link
                                         key={item}
-                                        href={`#${item.toLowerCase()}`}
+                                        href={`/#${item.toLowerCase()}`}
                                         onClick={() => setIsOpen(false)}
                                         className="hover:text-white hover:bg-white/5 p-3 rounded-xl transition-all"
                                     >

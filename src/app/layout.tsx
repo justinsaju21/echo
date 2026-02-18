@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 };
 
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { SiteFooter } from "@/components/Footer";
 
 // ... existing code ...
 
@@ -65,7 +65,7 @@ export default function RootLayout({
           <main className="flex-grow">
             {children}
           </main>
-          <Footer />
+          <SiteFooter />
         </div>
       </body>
     </html>
