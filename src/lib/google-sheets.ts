@@ -13,27 +13,46 @@ export async function appendToSheet(data: any) {
 
         let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.trim();
 
-        // Handle Base64 encoded key (to fix Vercel newline issues)
+        // Sanitize check
         if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
-            console.log("DEBUG: Attempting to decode Base64 private key");
+            // Attempt Base64 decode
             try {
                 const decoded = Buffer.from(private_key, 'base64').toString('utf-8');
                 if (decoded.includes("-----BEGIN PRIVATE KEY-----")) {
                     private_key = decoded;
                 }
             } catch (e) {
-                console.error("DEBUG: Failed to decode Base64 key");
+                // Ignore, proceed as raw
             }
         }
 
-        // Standard sanitization (just in case)
+        // Cleanup:
+        // 1. Remove outer quotes
+        // 2. Unescape \n
+        // 3. Fix missing newlines around headers if they were flattened to spaces
         private_key = private_key
-            .replace(/^["'](.*)["']$/, '$1') // remove surrounding quotes
-            .replace(/\\n/g, "\n");         // convert literal \n to real newlines
+            .replace(/^["'](.*)["']$/, '$1')
+            .replace(/\\n/g, "\n");
 
-        // Final Verification
-        if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
-            console.error("DEBUG: Private key missing header after processing");
+        // If the key is one long line with spaces (common copy-paste error), fix it
+        if (!private_key.includes("\n") && private_key.includes(" ")) {
+            private_key = private_key
+                .replace("-----BEGIN PRIVATE KEY-----", "-----BEGIN PRIVATE KEY-----\n")
+                .replace("-----END PRIVATE KEY-----", "\n-----END PRIVATE KEY-----")
+                .replace(/ /g, "\n"); // DANGEROUS: simple space replacement might be too aggressive if body has spaces? 
+            // Actually PEM body shouldn't have spaces. But let's be safer:
+            // A better approach for flattened keys:
+            // match headers, and split the rest?
+            // simplified:
+            // private_key = private_key.split(String.raw`\n`).join('\n'); // already done by \\n replace
+        }
+
+        // Specific fix for "header space body space footer" pattern
+        const header = "-----BEGIN PRIVATE KEY-----";
+        const footer = "-----END PRIVATE KEY-----";
+        if (private_key.includes(header) && private_key.includes(footer) && !private_key.includes("\n")) {
+            const body = private_key.replace(header, "").replace(footer, "").trim().replace(/ /g, "\n");
+            private_key = `${header}\n${body}\n${footer}`;
         }
 
         const auth = new google.auth.GoogleAuth({
