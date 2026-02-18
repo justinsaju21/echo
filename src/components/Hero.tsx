@@ -32,7 +32,7 @@ export function Hero() {
                         ECE Council for Hosting and Operations
                     </motion.div>
 
-                    <h1 className="text-6xl md:text-9xl font-black tracking-tighter text-white mb-6 uppercase leading-[0.8]">
+                    <h1 className="text-5xl md:text-9xl font-black tracking-tighter text-white mb-6 uppercase leading-[0.9] md:leading-[0.8]">
                         <motion.span
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}

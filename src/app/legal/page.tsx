@@ -1,3 +1,5 @@
+"use client";
+
 import { Navbar } from "@/components/Navbar";
 import { motion } from "framer-motion";
 import { Reveal } from "@/components/ui/Reveal";
@@ -42,6 +44,27 @@ export default function LegalPage() {
                                 </div>
                             </div>
                         </aside>
+
+                        {/* Mobile Navigation (Visible only on small screens) */}
+                        <div className="md:hidden mb-8">
+                            <label className="text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2 block">Quick Jump to:</label>
+                            <select
+                                className="w-full bg-zinc-900 border border-zinc-800 text-white p-3 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                                onChange={(e) => {
+                                    const element = document.getElementById(e.target.value);
+                                    if (element) {
+                                        element.scrollIntoView({ behavior: 'smooth' });
+                                    }
+                                }}
+                            >
+                                <option value="">Select a section...</option>
+                                {sections.map((section) => (
+                                    <option key={section.id} value={section.id}>
+                                        {section.title}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
                         {/* Content Area */}
                         <div className="space-y-20">
