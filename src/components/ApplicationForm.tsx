@@ -130,6 +130,7 @@ export function ApplicationForm() {
         }
     }
 
+
     if (isSuccess) {
         return (
             <section id="apply" className="py-24 bg-zinc-950 flex justify-center items-center min-h-[60vh]">
@@ -142,7 +143,10 @@ export function ApplicationForm() {
                     <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
                         Apply for <span className="text-blue-500">Membership</span>
                     </h1>
-                    <p className="text-zinc-400 text-lg">Your response has been recorded. Shortlisted applicants will be contacted for the next stage.</p>
+                    <p className="text-zinc-400 text-lg mb-8">Your response has been recorded. Shortlisted applicants will be contacted for the next stage.</p>
+                    <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors font-medium">
+                        <ChevronLeft size={18} /> Return to Home
+                    </a>
                 </div>
             </section>
         );
@@ -154,6 +158,7 @@ export function ApplicationForm() {
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-900/10 blur-[120px] rounded-full pointer-events-none" />
 
             <div className="container mx-auto px-6 max-w-3xl relative z-10">
+                {/* ... existing header content ... */}
                 <div className="text-center mb-12">
                     <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Join the Team</h2>
                     <div className="inline-block px-4 py-2 bg-zinc-900 rounded-full border border-zinc-800">
@@ -186,7 +191,15 @@ export function ApplicationForm() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
                 >
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+                    <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-8"
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter" && currentStep < steps.length - 1) {
+                                e.preventDefault(); // Prevent submit on Enter unless it's the last step
+                            }
+                        }}
+                    >
 
                         {/* STEP 1: BASIC DETAILS */}
                         {currentStep === 0 && (

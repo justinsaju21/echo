@@ -19,6 +19,11 @@ export const metadata: Metadata = {
   description: "Building and managing digital systems for the department. Apply to join our core team.",
 };
 
+import { Navbar } from "@/components/Navbar";
+import { Footer } from "@/components/Footer";
+
+// ... existing code ...
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +35,11 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} font-sans antialiased bg-zinc-950 text-white selection:bg-blue-500/30`}
       >
         <div className="min-h-screen flex flex-col">
-          {children}
+          <Navbar />
+          <main className="flex-grow">
+            {children}
+          </main>
+          <Footer />
         </div>
       </body>
     </html>
