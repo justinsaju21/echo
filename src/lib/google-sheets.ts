@@ -11,49 +11,66 @@ export async function appendToSheet(data: any) {
             .trim()
             .replace(/^["'](.*)["']$/, '$1');
 
-        let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.trim();
-
-        // Sanitize check
+        // ---------------------------------------------------------
+        // Strategy 0: Base64 Decode Check (The "User pasted Base64" case)
+        // ---------------------------------------------------------
+        // If it looks like Base64 (no spaces, no headers, valid chars), try decoding first
         if (!private_key.includes("-----BEGIN PRIVATE KEY-----")) {
-            // Attempt Base64 decode
             try {
                 const decoded = Buffer.from(private_key, 'base64').toString('utf-8');
+                // If the decoded version looks like a key, use it!
                 if (decoded.includes("-----BEGIN PRIVATE KEY-----")) {
-                    private_key = decoded;
+                    console.log("DEBUG: Decoded Base64 private key");
+                    private_key = decoded.trim();
                 }
             } catch (e) {
-                // Ignore, proceed as raw
+                // Not base64, proceed
             }
         }
 
-        // Cleanup:
-        // 1. Remove outer quotes
-        // 2. Unescape \n
-        // 3. Fix missing newlines around headers if they were flattened to spaces
-        private_key = private_key
-            .replace(/^["'](.*)["']$/, '$1')
-            .replace(/\\n/g, "\n");
-
-        // If the key is one long line with spaces (common copy-paste error), fix it
-        if (!private_key.includes("\n") && private_key.includes(" ")) {
-            private_key = private_key
-                .replace("-----BEGIN PRIVATE KEY-----", "-----BEGIN PRIVATE KEY-----\n")
-                .replace("-----END PRIVATE KEY-----", "\n-----END PRIVATE KEY-----")
-                .replace(/ /g, "\n"); // DANGEROUS: simple space replacement might be too aggressive if body has spaces? 
-            // Actually PEM body shouldn't have spaces. But let's be safer:
-            // A better approach for flattened keys:
-            // match headers, and split the rest?
-            // simplified:
-            // private_key = private_key.split(String.raw`\n`).join('\n'); // already done by \\n replace
+        // ---------------------------------------------------------
+        // Strategy 1: Check if it's the full JSON content pasted in
+        // ---------------------------------------------------------
+        if (private_key.startsWith("{")) {
+            try {
+                const jsonKey = JSON.parse(private_key);
+                if (jsonKey.private_key) {
+                    private_key = jsonKey.private_key;
+                    console.log("DEBUG: Extracted private_key from JSON env var");
+                }
+            } catch (e) {
+                // Not valid JSON, continue
+            }
         }
 
-        // Specific fix for "header space body space footer" pattern
-        const header = "-----BEGIN PRIVATE KEY-----";
-        const footer = "-----END PRIVATE KEY-----";
-        if (private_key.includes(header) && private_key.includes(footer) && !private_key.includes("\n")) {
-            const body = private_key.replace(header, "").replace(footer, "").trim().replace(/ /g, "\n");
-            private_key = `${header}\n${body}\n${footer}`;
+        // ---------------------------------------------------------
+        // Strategy 2: Aggressive PEM Reconstruction
+        // ---------------------------------------------------------
+        // Goals:
+        // 1. Remove all headers/footers
+        // 2. Remove all existing line breaks, spaces, and escaped newlines
+        // 3. Re-wrap cleanly
+
+        // Remove outer quotes if present
+        private_key = private_key.replace(/^["'](.*)["']$/, '$1');
+
+        // Allow literally "null" or empty strings to fail gracefully later
+        if (private_key.length < 50) {
+            throw new Error("Private Key is too short or missing.");
         }
+
+        // Strip headers and footers to isolate the Base64 body
+        const body = private_key
+            .replace(/-----BEGIN PRIVATE KEY-----/g, "")
+            .replace(/-----END PRIVATE KEY-----/g, "")
+            .replace(/\\n/g, "") // remove literal \n
+            .replace(/\s+/g, ""); // remove all whitespace (newlines, spaces, tabs)
+
+        // Reconstruct the PEM key
+        // Note: GoogleAuth often accepts the body with just the headers and \n
+        private_key = `-----BEGIN PRIVATE KEY-----\n${body}\n-----END PRIVATE KEY-----`;
+
+        // ---------------------------------------------------------
 
         const auth = new google.auth.GoogleAuth({
             credentials: {
