@@ -164,17 +164,40 @@ export function ApplicationForm() {
             <section id="apply" className="py-24 bg-zinc-950 flex justify-center items-center min-h-[60vh]">
                 <div className="bg-zinc-900/50 border border-green-500/30 p-10 rounded-3xl text-center max-w-lg mx-6 backdrop-blur-sm">
                     <div className="flex justify-center mb-6">
-                        <div className="w-20 h-20 bg-green-500/10 rounded-full flex items-center justify-center">
-                            <CheckCircle className="w-10 h-10 text-green-500" />
-                        </div>
+                        <motion.div
+                            initial={{ scale: 0, rotate: -20 }}
+                            animate={{ scale: 1, rotate: 0 }}
+                            transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.2 }}
+                            className="w-24 h-24 bg-green-500/10 rounded-full flex items-center justify-center border border-green-500/20 shadow-[0_0_30px_rgba(34,197,94,0.1)]"
+                        >
+                            <CheckCircle className="w-12 h-12 text-green-500" />
+                        </motion.div>
                     </div>
-                    <h1 className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="text-4xl md:text-6xl font-black text-white mb-6 uppercase tracking-tighter"
+                    >
                         Applied for <span className="text-blue-500">Membership</span>
-                    </h1>
-                    <p className="text-zinc-400 text-lg mb-8">Your response has been recorded. Shortlisted applicants will be contacted for the next stage.</p>
-                    <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors font-medium">
-                        <ChevronLeft size={18} /> Return to Home
-                    </a>
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.5 }}
+                        className="text-zinc-400 text-lg mb-8"
+                    >
+                        Your response has been recorded. Shortlisted applicants will be contacted for the next stage.
+                    </motion.p>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.7 }}
+                    >
+                        <a href="/" className="inline-flex items-center gap-2 px-6 py-3 bg-zinc-800 hover:bg-zinc-700 text-white rounded-xl transition-colors font-medium border border-white/5">
+                            <ChevronLeft size={18} /> Return to Home
+                        </a>
+                    </motion.div>
                 </div>
             </section>
         );
