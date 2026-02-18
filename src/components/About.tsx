@@ -47,7 +47,7 @@ export function About() {
                     </motion.div>
                     <div className="relative">
                         <div className="absolute inset-0 bg-blue-500/20 blur-[100px] -z-10 rounded-full" />
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-4">
                             <motion.div
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
@@ -66,7 +66,7 @@ export function About() {
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.4 }}
                                 whileHover={{ y: -5 }}
-                                className="p-6 bg-zinc-900 border border-white/5 rounded-2xl mt-8"
+                                className="p-6 bg-zinc-900 border border-white/5 rounded-2xl"
                             >
                                 <Zap className="w-8 h-8 text-white mb-4" />
                                 <h4 className="text-white font-medium mb-2">Production Ready</h4>
@@ -78,7 +78,7 @@ export function About() {
                                 viewport={{ once: true }}
                                 transition={{ delay: 0.6 }}
                                 whileHover={{ y: -5 }}
-                                className="col-span-2 p-6 bg-zinc-900 border border-white/5 rounded-2xl"
+                                className="p-6 bg-zinc-900 border border-white/5 rounded-2xl"
                             >
                                 <Shield className="w-8 h-8 text-white mb-4" />
                                 <h4 className="text-white font-medium mb-2">Future Proof</h4>
