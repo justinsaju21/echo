@@ -11,6 +11,8 @@ export async function appendToSheet(data: any) {
             .trim()
             .replace(/^["'](.*)["']$/, '$1');
 
+        let private_key = process.env.GOOGLE_SHEETS_PRIVATE_KEY!.trim();
+
         // ---------------------------------------------------------
         // Strategy 0: Base64 Decode Check (The "User pasted Base64" case)
         // ---------------------------------------------------------
