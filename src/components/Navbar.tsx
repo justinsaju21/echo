@@ -44,9 +44,9 @@ export function Navbar() {
                     "pointer-events-auto transition-all duration-300 ease-in-out relative",
                     "mt-4 md:mt-6 rounded-2xl border flex flex-col",
                     scrolled
-                        ? "bg-zinc-950/80 backdrop-blur-xl border-white/10 shadow-2xl shadow-black/50 py-2"
-                        : "bg-zinc-900/40 backdrop-blur-md border-white/5 py-3",
-                    "w-[94%] max-w-6xl"
+                        ? "bg-zinc-950/80 backdrop-blur-xl border-white/10 shadow-2xl shadow-black/50 py-3"
+                        : "bg-zinc-900/40 backdrop-blur-md border-white/5 py-4",
+                    "w-[96%] max-w-7xl"
                 )}
             >
                 <div className="flex items-center justify-between px-6">
@@ -110,6 +110,6 @@ export function Navbar() {
                     )}
                 </AnimatePresence>
             </motion.nav>
-        </div>
+        </div >
     );
 }
