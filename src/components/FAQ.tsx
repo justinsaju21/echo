@@ -51,7 +51,7 @@ export function FAQ() {
                                         exit={{ height: 0, opacity: 0 }}
                                         transition={{ duration: 0.2 }}
                                     >
-                                        <div className="p-6 pt-0 text-zinc-400 leading-relaxed border-t border-zinc-900/50">
+                                        <div className="p-6 pt-4 text-zinc-400 leading-relaxed border-t border-zinc-900/50">
                                             {faq.answer}
                                         </div>
                                     </motion.div>

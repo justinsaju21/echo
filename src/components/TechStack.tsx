@@ -26,16 +26,16 @@ export function TechStack() {
 
                 <motion.div
                     className="flex gap-16 items-center whitespace-nowrap"
-                    animate={{ x: [0, -1000] }}
+                    animate={{ x: ["0%", "-50%"] }}
                     transition={{
                         repeat: Infinity,
                         ease: "linear",
                         duration: 30
                     }}
                 >
-                    {[...stack, ...stack, ...stack].map((item, index) => (
+                    {[...stack, ...stack, ...stack, ...stack].map((item, index) => (
                         <div key={index} className="flex items-center gap-3 text-zinc-400 font-medium text-lg hover:text-blue-400 hover:scale-110 transition-all cursor-default">
-                            <span className="text-blue-500/50 group-hover:text-blue-500 transition-colors">{item.icon}</span>
+                            <span className="text-blue-500/50">{item.icon}</span>
                             {item.name}
                         </div>
                     ))}

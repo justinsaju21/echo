@@ -1,11 +1,13 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { motion, AnimatePresence } from "framer-motion";
 import { Loader2, CheckCircle, ChevronRight, ChevronLeft, Check } from "lucide-react";
 import clsx from "clsx";
+
+const STORAGE_KEY = "echo-application-draft";
 
 // --- Schema Definition ---
 const formSchema = z.object({
@@ -73,16 +75,34 @@ export function ApplicationForm() {
     const [currentStep, setCurrentStep] = useState(0);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [isValidating, setIsValidating] = useState(false);
     const [error, setError] = useState<string | null>(null);
+
+    // Load saved draft from localStorage
+    const getSavedDraft = () => {
+        if (typeof window === "undefined") return { domains: [], links: "" };
+        try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) return JSON.parse(saved);
+        } catch (e) { /* ignore */ }
+        return { domains: [], links: "" };
+    };
 
     const { register, control, handleSubmit, watch, trigger, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: {
-            domains: [],
-            links: "",
-        },
+        defaultValues: getSavedDraft(),
         mode: "onChange"
     });
+
+    // Auto-save form data to localStorage
+    const formValues = watch();
+    useEffect(() => {
+        if (!isSuccess) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(formValues));
+            } catch (e) { /* ignore */ }
+        }
+    }, [formValues, isSuccess]);
 
     const selectedDomains = watch("domains");
 
@@ -95,6 +115,7 @@ export function ApplicationForm() {
 
     // Helper to validate current step before proceeding
     const nextStep = async () => {
+        setIsValidating(true);
         let fieldsToValidate: (keyof FormValues)[] = [];
 
         if (currentStep === 0) fieldsToValidate = ['fullName', 'regNo', 'deptYear', 'phone', 'email'];
@@ -102,12 +123,17 @@ export function ApplicationForm() {
         if (currentStep === 2) fieldsToValidate = ['experience', 'skills', 'links', 'hours'];
 
         const isValid = await trigger(fieldsToValidate);
+        setIsValidating(false);
         if (isValid) setCurrentStep(prev => prev + 1);
     };
 
     const prevStep = () => setCurrentStep(prev => prev - 1);
 
     async function onSubmit(data: FormValues) {
+        // Guard: only submit from the final step
+        if (currentStep !== steps.length - 1) return;
+        if (isSubmitting) return; // Prevent double-submit
+
         setIsSubmitting(true);
         setError(null);
         try {
@@ -123,6 +149,8 @@ export function ApplicationForm() {
                 throw new Error(result.message || "Failed to submit application");
             }
             setIsSuccess(true);
+            // Clear saved draft on success
+            try { localStorage.removeItem(STORAGE_KEY); } catch (e) { /* ignore */ }
         } catch (err: any) {
             setError(err.message || "Something went wrong. Please try again.");
         } finally {
@@ -195,8 +223,8 @@ export function ApplicationForm() {
                         onSubmit={handleSubmit(onSubmit)}
                         className="space-y-8"
                         onKeyDown={(e) => {
-                            if (e.key === "Enter" && currentStep < steps.length - 1) {
-                                e.preventDefault(); // Prevent submit on Enter unless it's the last step
+                            if (e.key === "Enter") {
+                                e.preventDefault(); // Prevent Enter from submitting on any step
                             }
                         }}
                     >
@@ -367,17 +395,28 @@ export function ApplicationForm() {
 
                                 <div className="space-y-3 pt-4 border-t border-white/5">
                                     <label className="text-sm font-medium text-zinc-400 block">Are you interested in leading a domain in the future?</label>
-                                    <div className="flex gap-6">
-                                        {["Yes", "No", "Maybe"].map(opt => (
-                                            <label key={opt} className="flex items-center gap-2 cursor-pointer group">
-                                                <input type="radio" value={opt} {...register("leadershipInterest")} className="hidden peer" />
-                                                <div className="w-5 h-5 rounded-full border border-zinc-700 peer-checked:border-blue-500 peer-checked:bg-blue-500/20 flex items-center justify-center">
-                                                    <div className="w-2.5 h-2.5 rounded-full bg-blue-500 opacity-0 peer-checked:opacity-100 transition-opacity" />
-                                                </div>
-                                                <span className="text-zinc-300 group-hover:text-white transition-colors">{opt}</span>
-                                            </label>
-                                        ))}
-                                    </div>
+                                    <Controller
+                                        control={control}
+                                        name="leadershipInterest"
+                                        render={({ field }) => (
+                                            <div className="flex gap-6">
+                                                {["Yes", "No", "Maybe"].map(opt => (
+                                                    <label key={opt} className="flex items-center gap-2 cursor-pointer group" onClick={() => field.onChange(opt)}>
+                                                        <div className={clsx(
+                                                            "w-5 h-5 rounded-full border flex items-center justify-center transition-all",
+                                                            field.value === opt ? "border-blue-500 bg-blue-500/20" : "border-zinc-700"
+                                                        )}>
+                                                            <div className={clsx(
+                                                                "w-2.5 h-2.5 rounded-full bg-blue-500 transition-opacity",
+                                                                field.value === opt ? "opacity-100" : "opacity-0"
+                                                            )} />
+                                                        </div>
+                                                        <span className="text-zinc-300 group-hover:text-white transition-colors">{opt}</span>
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        )}
+                                    />
                                     {errors.leadershipInterest && <p className="text-red-400 text-xs">{errors.leadershipInterest.message}</p>}
                                 </div>
                             </motion.div>
@@ -392,11 +431,18 @@ export function ApplicationForm() {
                             ) : <div />}
 
                             {currentStep < steps.length - 1 ? (
-                                <button type="button" onClick={nextStep} className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2">
-                                    Next <ChevronRight size={18} />
+                                <button
+                                    key="next-btn"
+                                    type="button"
+                                    onClick={nextStep}
+                                    disabled={isValidating}
+                                    className="px-8 py-3 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 transition-colors flex items-center gap-2 disabled:opacity-50"
+                                >
+                                    {isValidating ? <Loader2 className="animate-spin w-5 h-5" /> : <>Next <ChevronRight size={18} /></>}
                                 </button>
                             ) : (
                                 <button
+                                    key="submit-btn"
                                     type="submit"
                                     disabled={isSubmitting}
                                     className="px-8 py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-500 transition-all flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-900/20"

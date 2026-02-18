@@ -23,14 +23,6 @@ export const metadata: Metadata = {
     description: "Building and managing digital systems for the department. Apply to join our core team.",
     url: "https://echo-recruitment.vercel.app",
     siteName: "ECHO Recruitment",
-    images: [
-      {
-        url: "/og-image.png", // We should add this image later or use a default one
-        width: 1200,
-        height: 630,
-        alt: "ECHO Recruitment",
-      },
-    ],
     locale: "en_US",
     type: "website",
   },
@@ -38,7 +30,6 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "ECHO Recruitment | Join the Team",
     description: "Building and managing digital systems for the department. Apply to join our core team.",
-    images: ["/og-image.png"], // Same here
   },
   icons: {
     icon: "/favicon.ico",

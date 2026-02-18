@@ -50,12 +50,17 @@ export function Timeline() {
                             transition={{ delay: index * 0.1 }}
                             className="relative group"
                         >
-                            {/* Connector Line (Desktop) */}
+                            {/* Connector Line (Desktop - horizontal) */}
                             {index !== steps.length - 1 && (
                                 <div className="hidden md:block absolute top-8 left-1/2 w-full h-[1px] bg-zinc-800 -z-10 group-hover:bg-blue-500/30 transition-colors" />
                             )}
 
-                            <div className="flex flex-col items-center">
+                            {/* Connector Line (Mobile - vertical) */}
+                            {index !== steps.length - 1 && (
+                                <div className="md:hidden absolute left-1/2 -translate-x-1/2 top-[4.5rem] w-[1px] h-8 bg-zinc-800" />
+                            )}
+
+                            <div className="flex flex-col items-center pb-8 md:pb-0">
                                 <div className="w-16 h-16 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 mb-6 group-hover:text-blue-500 group-hover:border-blue-500 group-hover:bg-blue-500/5 transition-all duration-300">
                                     {step.icon}
                                 </div>

@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { Server, Zap, Code, Shield, Terminal, ZapIcon } from "lucide-react";
+import Link from "next/link";
 
 const perks = [
     {
@@ -16,7 +17,7 @@ const perks = [
     },
     {
         title: "Technical Autonomy",
-        description: "Deicde the stack, own the architecture, run the system.",
+        description: "Decide the stack, own the architecture, run the system.",
         icon: <Terminal className="w-5 h-5" />,
     },
 ];
@@ -66,16 +67,18 @@ export function BecomeMember() {
                                 </motion.div>
                             ))}
 
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3 }}
-                                className="p-6 rounded-2xl bg-blue-600 border border-blue-500 flex flex-col justify-end group cursor-pointer"
-                            >
-                                <h3 className="text-white font-bold text-lg mb-1">Join Echo</h3>
-                                <p className="text-blue-100 text-sm">Apply for our current intake.</p>
-                            </motion.div>
+                            <Link href="/apply">
+                                <motion.div
+                                    initial={{ opacity: 0, y: 10 }}
+                                    whileInView={{ opacity: 1, y: 0 }}
+                                    viewport={{ once: true }}
+                                    transition={{ delay: 0.3 }}
+                                    className="p-6 rounded-2xl bg-blue-600 border border-blue-500 flex flex-col justify-end group cursor-pointer hover:bg-blue-500 transition-colors h-full"
+                                >
+                                    <h3 className="text-white font-bold text-lg mb-1">Join Echo</h3>
+                                    <p className="text-blue-100 text-sm">Apply for our current intake.</p>
+                                </motion.div>
+                            </Link>
                         </div>
                     </div>
                 </div>

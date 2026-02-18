@@ -10,7 +10,7 @@ export function SiteFooter() {
                     Powering the digital backbone of ECE.
                 </p>
 
-                <div className="flex flex-wrap justify-center gap-6 text-xs text-zinc-600 mb-8 max-w-2xl mx-[auto]">
+                <div className="flex flex-wrap justify-center gap-6 text-xs text-zinc-600 mb-8 max-w-2xl mx-auto">
                     <Link href="/legal#copyright" className="hover:text-blue-500 transition-colors uppercase tracking-wider">
                         Copyright Policy
                     </Link>

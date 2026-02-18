@@ -41,8 +41,8 @@ export function Features() {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    whileHover={{ x: 10 }}
-                                    className="flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 transition-colors"
+                                    whileHover={{ scale: 1.02 }}
+                                    className="flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-zinc-900/30 hover:bg-zinc-900 hover:border-zinc-700 transition-all"
                                 >
                                     <div className="mt-1 w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
                                         <Check size={12} strokeWidth={3} />
@@ -68,8 +68,8 @@ export function Features() {
                                     whileInView={{ opacity: 1, x: 0 }}
                                     viewport={{ once: true }}
                                     transition={{ delay: i * 0.1 }}
-                                    whileHover={{ x: -10 }}
-                                    className="flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-gradient-to-r from-blue-900/10 to-transparent hover:from-blue-900/20 transition-colors"
+                                    whileHover={{ scale: 1.02 }}
+                                    className="flex items-start gap-4 p-4 rounded-xl border border-zinc-800 bg-gradient-to-r from-blue-900/10 to-transparent hover:from-blue-900/20 hover:border-zinc-700 transition-all"
                                 >
                                     <div className="mt-1 w-5 h-5 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center shrink-0">
                                         <Check size={12} strokeWidth={3} />
